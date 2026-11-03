@@ -1,0 +1,44 @@
+{
+	admin 127.0.0.1:2029
+	skip_install_trust
+}
+
+https://localhost, https://127.0.0.1, https://192.168.1.152 {
+	tls internal
+	@outside not remote_ip private_ranges
+	respond @outside "Acceso disponible solo en la red local." 403
+	encode zstd gzip
+	request_body {
+		max_size 30MB
+	}
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' blob: https://challenges.cloudflare.com; worker-src 'self' blob:"
+		-Server
+	}
+	@backend path /api /api/* /health /health/*
+	handle @backend {
+		reverse_proxy 127.0.0.1:8010 {
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 50s
+			}
+		}
+	}
+	handle {
+		root * "{$INGEAR_RELEASE_ROOT}/frontend"
+		try_files {path} /index.html
+		header Cache-Control "no-cache"
+		file_server
+	}
+	log {
+		output file "{$INGEAR_RELEASE_ROOT}/logs/caddy-access.json" {
+			roll_size 10MiB
+			roll_keep 5
+			roll_keep_for 168h
+		}
+	}
+}

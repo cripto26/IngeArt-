@@ -1,0 +1,33 @@
+/node_modules/
+**/node_modules/
+/tmp/
+/tmp-brave-cdp/
+/_qa_backlog_tareas_mejoradas/
+.env
+.env.*
+!.env.example
+*.log
+*.out
+*.err
+
+# Informes, referencias y resultados ajenos al codigo de la aplicacion.
+/entregables/
+/output/
+/procesos/
+/_docx_review*/
+/*.doc
+/*.docx
+/*.pdf
+/INFORMACION_REDACTADA.txt
+/backups/
+
+# Caches regenerables.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
