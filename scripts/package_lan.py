@@ -50,6 +50,8 @@ def main():
     build = json.loads((FRONT / "dist/build-configuration.json").read_text(encoding="utf-8"))
     if build["deploymentTarget"] != "lan" or not build["bypass"]:
         parser.error("Compila primero el frontend LAN real con bypass privado explicito.")
+    if any((FRONT / "dist").rglob("*.pdf")):
+        parser.error("El frontend contiene documentos PDF; reconstruir con la politica de recursos publicos.")
     for repository in (API, FRONT):
         if subprocess.check_output(["git", "status", "--porcelain"], cwd=repository, text=True).strip():
             parser.error("Empaquetar unicamente commits fuente limpios y revisados.")
@@ -98,10 +100,11 @@ def main():
     files = {}
     for path in sorted(target.rglob("*")):
         relative = path.relative_to(target).as_posix()
-        if path.is_file() and not relative.startswith(("backend/credentials/", "backend/exports/", "backend/.tools/", "logs/", "caddy-data/", "caddy-config/")) and relative != "backend/.env":
+        if path.is_file() and not relative.startswith(("backend/credentials/", "backend/exports/", "backend/.tools/", "logs/", "caddy-data/", "caddy-config/")) and relative not in {"backend/.env", "Caddyfile"}:
             files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
     (target / "RELEASE.json").write_text(json.dumps({"target": "LAN-Caddy", "caddy_version": caddy_version, "source_commits": versions,
         "frontend_configuration": build, "private_configuration": "backend/.env",
+        "mutable_configuration": ["Caddyfile", "backend/.env"],
         "database": "Existing local database, unchanged by packaging", "files_sha256": files}, indent=2)+"\n", encoding="utf-8")
     print(json.dumps({"destination": str(target), "source_commits": versions, "public_files_verified": len(files)}))
 

@@ -74,6 +74,7 @@ def main():
     checks["operational_files_match"] = objects > 0 and not mismatches
     checks["no_development_packages"] = not any((LAN / "backend/.venv/Lib/site-packages").glob("pytest*"))
     checks["no_git_or_node_modules"] = not any(path.name in {".git", "node_modules"} for path in LAN.rglob("*"))
+    checks["no_public_pdf_documents"] = not any((LAN / "frontend").rglob("*.pdf"))
     result = {"ok": all(checks.values()), "checks": checks, "operational_files": objects,
         "operational_bytes": total, "source_commits": release["source_commits"],
         "tls_root_sha256": hashlib.sha256(ssl.PEM_cert_to_DER_cert(certificate.read_text())).hexdigest(),

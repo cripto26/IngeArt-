@@ -209,3 +209,16 @@ al crearlas: [métricas Cloud Run](https://docs.cloud.google.com/monitoring/api/
 y [métricas Cloud SQL](https://docs.cloud.google.com/monitoring/api/metrics_gcp_c#cloudsql).
 Las alertas de respaldo/PITR y recepción real siguen dentro de la aceptación del
 proyecto aplazado; estas plantillas no acreditan que ya haya monitorización activa.
+
+## Exclusión de documentos en archivos públicos
+
+La comprobación final detectó cuatro PDF en `public/IMAGENES`, entre ellos un
+documento comercial. El build ahora prepara una carpeta pública aparte:
+los recursos de interfaz se permiten mediante `scripts/public-asset-policy.json`
+y el catálogo admite solo imágenes con extensión y cabecera de raster reconocidas.
+Se regeneran las rutas del manifiesto a partir de los archivos admitidos. Los
+PDF y archivos arbitrarios, incluso un PDF renombrado como JPG, quedan fuera de
+`dist`; los originales se conservan. Esta política se aplica a LAN y producción,
+y tiene una prueba con documento comercial, secreto local y extensión falsa.
+Los recursos raster del catálogo que están fuera de Git se incluyen como
+activos públicos identificados en el archivo de fuentes, sin incluir documentos.

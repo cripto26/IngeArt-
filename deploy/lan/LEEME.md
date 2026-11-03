@@ -32,6 +32,10 @@ sitios del `Caddyfile` y `PUBLIC_APP_ORIGIN` en `backend/.env`. No abrir esta
 instalación a Internet. World Office está aplazado por decisión del usuario;
 solo se habilitará con TLS validado. En Cloud se exige además ODBC 18.
 
+`Caddyfile` y `backend/.env` son configuración editable por el operador; el
+arranque valida su sintaxis y el esquema. Las huellas de `RELEASE.json`
+protegen el código y los archivos del frontend, junto con el binario de Caddy.
+
 El firewall de Windows debe permitir TCP 80 y 443 desde la subred local en el
 perfil privado. `Habilitar-AccesoLAN.ps1` prepara esa regla y debe ejecutarse
 como administrador en el servidor si el firewall bloquea el acceso. No se necesitan puertos de PostgreSQL ni 8010 abiertos a los
