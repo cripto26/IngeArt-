@@ -25,6 +25,8 @@ No copiar esta carpeta a un repositorio ni a Firebase: contiene configuración,
 credenciales, documentos y claves TLS privados. Para Google Cloud utilizar los
 repositorios fuente y los controles productivos. El manifiesto `RELEASE.json`
 identifica ambos commits y las huellas del código servido.
+La entrega también excluye su contenido de Git, Docker y gcloud; usar el archivo
+de fuentes limpio para preparar Google Cloud.
 
 Solo se sirve el frontend; la configuración, credenciales, logs, base y
 documentos quedan fuera de su raíz pública. Si cambia la IP, modificar los

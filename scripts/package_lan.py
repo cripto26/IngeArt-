@@ -60,6 +60,12 @@ def main():
     if caddy_version != "v" + toolchain["caddy"]:
         parser.error("Usar la version de Caddy fijada en deployment-toolchain.json.")
     target.mkdir(parents=True, exist_ok=True)
+    # This runnable bundle contains LAN secrets and must never become a source
+    # upload. Cloud builds use the separate clean repositories/source archive.
+    for name in (".gitignore", ".gcloudignore", ".dockerignore", "backend/.gcloudignore", "backend/.dockerignore"):
+        blocker = target / name
+        blocker.parent.mkdir(parents=True, exist_ok=True)
+        blocker.write_text("**\n", encoding="utf-8")
     for template in (ROOT / "deploy/lan").iterdir():
         if template.is_file() and (template.name == "Caddyfile" or template.suffix in {".py", ".ps1", ".cmd", ".md"}):
             copy_file(template, target / template.name)
