@@ -51,7 +51,7 @@ Caddy continúa sirviendo `D:\IngeArt\Front_Ingear\dist-lan` y envía las solici
 
    En las siguientes publicaciones basta con añadir los punteros `API_Ingear` y `Front_Ingear` antes de hacer el commit y el push a `produccion`. Si Git rechaza el push por diferencias de historial, revisa y sincroniza esa rama antes de reintentar.
 
-4. Abre [GitHub Actions](https://github.com/cripto26/IngeArt-/actions) y busca **Publicar IngeArt**. El resultado exitoso comprueba la revisión que responde en [Firebase Hosting](https://stalwart-edge-513717-s4.web.app/health/ready). Luego prueba el ingreso y los cambios de interfaz en el navegador.
+4. Abre [GitHub Actions](https://github.com/cripto26/IngeArt-/actions) y busca **Publicar IngeArt**. Después del despliegue, el flujo verifica en [Firebase Hosting](https://stalwart-edge-513717-s4.web.app/health/ready) que responda la revisión esperada. La comprobación admite hasta 12 intentos con pausas de 10 segundos entre ellos. Luego prueba el ingreso y los cambios de interfaz en el navegador.
 
 Cuando cambia solo el frontend, el flujo reutiliza la API activa si coincide con el commit seleccionado y es la última revisión lista. Si cambia la API, Cloud Build construye la imagen, Cloud Run crea una revisión con 0 % de tráfico y el flujo comprueba su salud antes de activarla. Firebase enlaza su publicación a esa revisión. El resumen de Actions conserva el reparto anterior de tráfico para facilitar una reversión. [Revisiones de Cloud Run fijadas desde Firebase](https://firebase.google.com/docs/hosting/cloud-run#direct-hosting-requests-to-your-containerized-app)
 

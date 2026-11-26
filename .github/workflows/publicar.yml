@@ -178,13 +178,31 @@ jobs:
         with:
           workload_identity_provider: ${{ env.INGEAR_WIF_PROVIDER }}
           service_account: ${{ env.INGEAR_DEPLOY_SA }}
-      - name: Publicar Firebase y comprobar su conexión con la API
+      - name: Publicar frontend en Firebase Hosting
         working-directory: Front_Ingear
         env:
           F13_API_CHECK_ORIGIN: ${{ steps.api.outputs.origen }}
           F13_EXPECTED_API_VERSION: ${{ env.INGEAR_API_VERSION }}
           F13_EXPECTED_API_REVISION: ${{ steps.api.outputs.revision }}
+        run: npm run deploy -- --project=stalwart-edge-513717-s4 --non-interactive
+      - name: Comprobar la API desde Firebase Hosting
+        working-directory: Front_Ingear
+        timeout-minutes: 6
+        env:
+          F13_API_CHECK_ORIGIN: https://stalwart-edge-513717-s4.web.app
+          F13_EXPECTED_API_VERSION: ${{ env.INGEAR_API_VERSION }}
+          F13_EXPECTED_API_REVISION: ${{ steps.api.outputs.revision }}
         run: |
-          npm run deploy -- --project=stalwart-edge-513717-s4 --non-interactive
-          F13_API_CHECK_ORIGIN=https://stalwart-edge-513717-s4.web.app npm run production:api
-          printf 'Web publicada y comprobada: https://stalwart-edge-513717-s4.web.app\n' >> "$GITHUB_STEP_SUMMARY"
+          intentos=12
+          for ((intento=1; intento<=intentos; intento++)); do
+            if npm run production:api; then
+              printf 'Web publicada y comprobada: %s\n' "$F13_API_CHECK_ORIGIN" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            if ((intento < intentos)); then
+              printf 'Comprobación %d/%d fallida. Reintento en 10 segundos.\n' "$intento" "$intentos"
+              sleep 10
+            fi
+          done
+          echo '::error::La API de la revisión esperada no se verificó desde Firebase Hosting.'
+          exit 1
