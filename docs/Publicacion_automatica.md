@@ -43,7 +43,7 @@ Caddy continúa sirviendo `D:\IngeArt\Front_Ingear\dist-lan` y envía las solici
 3. Registra en el repositorio principal qué versiones se publican. En el primer despliegue incluye el flujo y sus scripts. Revisa el contenido preparado con `git diff --cached --stat` antes de guardar el commit:
 
    ```powershell
-   git add -- API_Ingear Front_Ingear .github/workflows/publicar.yml scripts/publicar_cloud.sh scripts/configurar_publicacion_cloud.sh docs/Publicacion_automatica.md
+   git add -- API_Ingear Front_Ingear .gitmodules .github/workflows/publicar.yml scripts/publicar_cloud.sh scripts/configurar_publicacion_cloud.sh docs/Publicacion_automatica.md
    git diff --cached --stat
    git commit -m "Preparar publicación de IngeArt"
    git push origin HEAD:refs/heads/produccion

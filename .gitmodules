@@ -1,0 +1,6 @@
+[submodule "API_Ingear"]
+	path = API_Ingear
+	url = https://github.com/cripto26/Ingear_API.git
+[submodule "Front_Ingear"]
+	path = Front_Ingear
+	url = https://github.com/cripto26/Front_Ingear.git

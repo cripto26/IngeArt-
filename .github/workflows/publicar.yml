@@ -6,6 +6,7 @@ on:
     paths:
       - API_Ingear
       - Front_Ingear
+      - .gitmodules
       - .github/workflows/publicar.yml
       - scripts/publicar_cloud.sh
   workflow_dispatch:
